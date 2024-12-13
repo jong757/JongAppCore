@@ -161,5 +161,3 @@ $fileCacheManager->delete('user_123');
 $fileCacheManager->clear(); 
 $redisCacheManager->clear();
 ```
-		
-
