@@ -1,0 +1,10 @@
+{
+    "name": "My Server",
+    "host": "192.168.110.120",
+    "protocol": "ftp",
+    "port": 21,
+    "username": "jongname",
+    "password": "123456",
+    "remotePath": "/demo2.cc",
+    "uploadOnSave": true
+}

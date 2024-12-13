@@ -1,0 +1,23 @@
+{
+    "name": "jongapp/core",
+    "description": "JongApp Core System",
+    "autoload": {
+        "psr-4": {
+            "Jongapp\\Core\\": "src/"
+            
+        }
+    },
+    "require": {
+     
+    },
+    "authors": [
+        {
+            "name": "Jong757",
+            "email": "jongname@outlook.com"
+        }
+    ],
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist"
+    }
+}
