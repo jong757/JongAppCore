@@ -1,82 +1,61 @@
-<?php
 namespace App\Library\Services;
 
-use App\Library\Interfaces\CacheInterface;
 use App\Library\Utilities\Config;
+use App\Library\Interfaces\CacheInterface;
 use Exception;
 
 class CacheManager
 {
-    private static $_instances = [];
     private $cacheInstance;
+    private $cacheType;
 
-    private function __construct($cacheType)
+    /**
+     * 构造函数，支持传入缓存类型
+     *
+     * @param string|null $cacheType 缓存类型 (默认为 null，表示使用配置文件中的值)
+     */
+    public function __construct($cacheType = null)
     {
+        // 获取缓存配置
         $cacheConfig = Config::get('Cache');
         $systemConfig = Config::get('System');
 
         // 如果传入了缓存类型，则使用传入的类型；否则使用配置文件中的默认缓存类型
-        $cacheType = $cacheType ?? ($systemConfig['cache'] ?? 'file');
+        $this->cacheType = $cacheType ?? ($systemConfig['cache'] ?? 'file');
 
         try {
-            $this->initializeCache($cacheType, $cacheConfig);
+            // 动态实例化缓存类
+            $this->initializeCache($cacheConfig[$this->cacheType]);
         } catch (Exception $e) {
+            // 捕获异常并提供友好的错误提示
             echo $e->getMessage();
             exit;  // 停止执行
         }
     }
 
     /**
-     * 获取缓存实例
+     * 动态实例化缓存类
      *
-     * @param string $cacheType 缓存类型
-     * @param bool $refresh 是否刷新实例
-     * @return CacheManager
-     */
-    public static function instance($cacheType = null, $refresh = false)
-    {
-        // 使用缓存类型作为实例标识，确保每个缓存类型只有一个实例
-        $cacheType = $cacheType ?? 'file';
-
-        if ($refresh || !isset(self::$_instances[$cacheType])) {
-            self::$_instances[$cacheType] = new self($cacheType);
-        }
-
-        return self::$_instances[$cacheType];
-    }
-
-    /**
-     * 根据缓存类型初始化对应的缓存实例
-     *
-     * @param string $cacheType 缓存类型
-     * @param array $cacheConfig 缓存配置
+     * @param array $cacheConfig 缓存配置项
      * @throws Exception
      */
-    private function initializeCache($cacheType, array $cacheConfig)
+    private function initializeCache(array $cacheConfig)
     {
-        // 缓存类型与类的映射关系
-        $cacheMap = [
-            'redis' => \App\Library\Utilities\RedisCache::class,
-            'file' => \App\Library\Utilities\FileCache::class,
-            // 可以继续扩展其他缓存类型
-        ];
-
-        // 检查是否有对应的缓存类型
-        if (!isset($cacheMap[$cacheType])) {
-            throw new Exception("Cache type '{$cacheType}' is not supported.");
+        if (isset($cacheConfig['ReflectionPath'])) {
+            $cacheClass = $cacheConfig['ReflectionPath'];
+            // 动态实例化缓存类
+            $this->cacheInstance = new $cacheClass($cacheConfig);
+        } else {
+            throw new Exception("Cache configuration does not contain ReflectionPath.");
         }
-
-        // 动态实例化缓存类
-        $cacheClass = $cacheMap[$cacheType];
-        $this->cacheInstance = new $cacheClass($cacheConfig[$cacheType]);
     }
 
     /**
      * 获取缓存实例
      *
-     * @return CacheInterface
+     * @return CacheInterface 缓存实例
      */
-    public function getCacheInstance(): CacheInterface
+    public function getCacheInstance()
     {
         return $this->cacheInstance;
     }
@@ -89,7 +68,7 @@ class CacheManager
      * @param int $ttl 缓存过期时间（秒）
      * @return bool
      */
-    public function set($key, $value, $ttl = 3600): bool
+    public function set($key, $value, $ttl = 3600)
     {
         return $this->cacheInstance->set($key, $value, $ttl);
     }
@@ -111,7 +90,7 @@ class CacheManager
      * @param string $key 缓存键
      * @return bool
      */
-    public function delete($key): bool
+    public function delete($key)
     {
         return $this->cacheInstance->delete($key);
     }
@@ -121,7 +100,7 @@ class CacheManager
      *
      * @return bool
      */
-    public function clear(): bool
+    public function clear()
     {
         return $this->cacheInstance->clear();
     }

@@ -3,10 +3,10 @@ MVC目录结构和架构设计，采用了一些不同的组织方式：
 ### 结构
 ```
 JongAppCore
-├─ app 
-│  ├─ Composer
-│  ├─ Config 
-│  ├─ Library 
+├─ app 					主要应用程序代码所在的目录。
+│  ├─ Composer			Composer 项目
+│  ├─ Config 			配置文件目录，存放应用程序的配置文件。
+│  ├─ Library 			库文件目录，存放自定义的库文件。
 │  │  ├─ Helpers 		存放一些辅助函数或工具类，这些函数或类可以在整个项目中重复使用。
 │  │  ├─ Interfaces 	存放接口定义，用于定义一些通用的接口规范。
 │  │  ├─ Middleware 	存放中间件类，用于处理请求和响应之间的逻辑
@@ -14,18 +14,18 @@ JongAppCore
 │  │  ├─ Services 		服务文件目录，存放应用程序的服务类。
 │  │  ├─ Traits 		存放一些可以在多个类中复用的特性（Traits）。
 │  │  └─ Utilities 		存放应用程序类,composer的src的作用
-│  ├─ Resources 
-│  │ ├─ Lang 
-│  │ └─ Views 
-│  ├─ Models 
-│  ├─ Views 
-│  └─ Core.php 
-├─ cache 
-│  └─ logs 
-├─ index.php 
-├─ README.md 
-├─ static 
-└─ upload 
+│  ├─ Resources 		资源文件目录。
+│  │ ├─ Lang 			语言文件目录，存放多语言支持的文件。
+│  │ └─ Views 			视图文件目录，存放错误类型如404 500 等友好显示。
+│  ├─ Models			模型文件目录，存放应用程序的数据模型。 
+│  ├─ Views 			视图文件目录，存放前端视图文件。
+│  └─ Core.php 			核心文件入口
+├─ cache 				缓存文件目录。
+│  └─ logs 				日志文件目录，存放应用程序的日志文件。
+├─ index.php 			应用程序的入口文件。
+├─ README.md 			项目的说明文件，通常包含项目的简介、安装和使用说明。
+├─ static 				静态文件目录，存放CSS、JavaScript、图片等静态资源。
+└─ upload 				上传存放目录
 ```
 
 ### 目录结构说明：

@@ -15,12 +15,12 @@ Core::register();
 $core = new Core();
 
 // // 获取 Redis 类型的缓存实例
-// $redisCacheManager = \App\Library\Services\CacheManager::instance('redis');
-// $redisCacheManager->set('user_123/123/222', ['name' => 'John Doe']);
-// $redisUserData = $redisCacheManager->get('user_123/123/222');
+$redisCacheManager = \App\Library\Services\CacheManager::instance('redis');
+$redisCacheManager->set('user_123/123/222', ['name' => 'John Doe']);
+$redisUserData = $redisCacheManager->get('user_123/123/222');
 
 // // 输出 Redis 缓存中的用户数据
-// print_r($redisUserData);
+print_r($redisUserData);
 
 
 // // 获取文件缓存实例
