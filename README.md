@@ -89,15 +89,15 @@ location /{
 ### 目前完成项和配置说明
 
 **composer**
-		- 已经自动加载 (全局可用)
+- 已经自动加载 (全局可用)
 
 **常量加载**
-		- 系统常量 \App\Library\Middleware\ConstantLoader::loadSystemConstants();
-		- 模型常量 \App\Library\Middleware\ConstantLoader::loadModuleConstants('ModuleA');
+- 系统常量 \App\Library\Middleware\ConstantLoader::loadSystemConstants();
+- 模型常量 \App\Library\Middleware\ConstantLoader::loadModuleConstants('ModuleA');
 
 **函数加载**
-		- 系统函数 \App\Library\Middleware\FunctionLoader::loadSystemFunctions();
-		- 模型函数 \App\Library\Middleware\FunctionLoader::loadModuleFunction('ModuleA');
+- 系统函数 \App\Library\Middleware\FunctionLoader::loadSystemFunctions();
+- 模型函数 \App\Library\Middleware\FunctionLoader::loadModuleFunction('ModuleA');
 
 **配置** (项增删改查)
 
