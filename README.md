@@ -70,6 +70,7 @@ location /{
 4. **模块化设计**: 将不同功能模块分开，增强代码的可维护性和可扩展性。
 5. **RESTful API**: 如果需要提供API接口，遵循RESTful设计原则，确保API的简洁性和一致性。
 
+
 ### Composer命令和说明
 1. `composer init`：初始化一个新的 Composer 项目并创建一个 `composer.json` 文件。
 2. `composer install`：根据 `composer.json` 文件安装项目的所有依赖包。
@@ -86,66 +87,79 @@ location /{
 13. `composer clear-cache`：清除 Composer 的缓存。
 
 ### 目前完成项和配置说明
+
 **composer**
 		- 已经自动加载 (全局可用)
+
 **常量加载**
 		- 系统常量 \App\Library\Middleware\ConstantLoader::loadSystemConstants();
 		- 模型常量 \App\Library\Middleware\ConstantLoader::loadModuleConstants('ModuleA');
+
 **函数加载**
 		- 系统函数 \App\Library\Middleware\FunctionLoader::loadSystemFunctions();
 		- 模型函数 \App\Library\Middleware\FunctionLoader::loadModuleFunction('ModuleA');
-		
+
 **配置** (项增删改查)
-	// 使用配置应用程序
-	use App\Library\Utilities\Config;
 
-	1. 使用 `Config::get()` 获取配置项。
+```
+// 使用配置应用程序
+use App\Library\Utilities\Config;
+```
+
+1. 使用 `Config::get()` 获取配置项。
+```
+Config::get('Cache');// 获取整个 'Cache' 配置命名空间
+Config::get('Cache', 'default');// 获取 'Cache' 配置下的 'default' 配置项
+Config::get('Cache', 'redis.host');// 获取 'Cache' 配置下嵌套的 'redis.host' 配置项
+```
+2. 使用 `Config::set()` 设置或修改配置项。
+
+```
+Config::set('Cache', 'default', 'redis');// 修改 'Cache' 配置下的 'default' 配置项为 'redis'
+Config::set('Cache', 'redis.host', '192.168.1.1');// 修改嵌套配置项 'Cache.redis.host'
+Config::set('Cache', 'redis', [// 修改或添加 'Cache' 配置下的 'redis' 配置项
+	'host' => '127.0.0.1',
+	'port' => 6380,  // 修改端口
+	'prefix' => 'new_prefix_',
+]);
+```
 		
-		Config::get('Cache');// 获取整个 'Cache' 配置命名空间
-		Config::get('Cache', 'default');// 获取 'Cache' 配置下的 'default' 配置项
-		Config::get('Cache', 'redis.host');// 获取 'Cache' 配置下嵌套的 'redis.host' 配置项
-			
-	2. 使用 `Config::set()` 设置或修改配置项。
-	
-		Config::set('Cache', 'default', 'redis');// 修改 'Cache' 配置下的 'default' 配置项为 'redis'
-		Config::set('Cache', 'redis.host', '192.168.1.1');// 修改嵌套配置项 'Cache.redis.host'
-		Config::set('Cache', 'redis', [// 修改或添加 'Cache' 配置下的 'redis' 配置项
-			'host' => '127.0.0.1',
-			'port' => 6380,  // 修改端口
-			'prefix' => 'new_prefix_',
-		]);
-		
-	3. 使用 `Config::delete()` 删除配置项或整个命名空间的配置。
-		
-		Config::delete('Cache', 'default');// 删除 'Cache' 配置下的 'default' 配置项
-		Config::delete('Cache', 'redis.host');// 删除嵌套配置项 'Cache.redis.host'
-		Config::delete('Cache');// 删除整个 'Cache' 配置命名空间
-		
-	5. 使用 `Config::save()` 保存修改后的配置到文件。
-	
-		Config::save('Cache');// 保存修改后的 'Cache' 配置到文件
-			
+3. 使用 `Config::delete()` 删除配置项或整个命名空间的配置。
+
+```
+Config::delete('Cache', 'default');// 删除 'Cache' 配置下的 'default' 配置项
+Config::delete('Cache', 'redis.host');// 删除嵌套配置项 'Cache.redis.host'
+Config::delete('Cache');// 删除整个 'Cache' 配置命名空间
+```
+5. 使用 `Config::save()` 保存修改后的配置到文件。
+
+```
+Config::save('Cache');// 保存修改后的 'Cache' 配置到文件
+```
+
 **缓存**
-	// 获取 Redis 类型的缓存实例
-	$redisCacheManager = \App\Library\Services\CacheManager::instance('redis');
-	$redisCacheManager->set('user_123', ['name' => 'John Doe']);
-	$redisUserData = $redisCacheManager->get('user_123');
-	echo 'Redis Cache - User Data: ';
-	print_r($redisUserData);
 
-	// 获取文件缓存实例
-	$fileCacheManager = \App\Library\Services\CacheManager::instance('file');
-	$fileCacheManager->set('user_123', ['name' => 'Jane Doe']);
-	$fileUserData = $fileCacheManager->get('user_123');
-	echo 'File Cache - User Data: ';
-	print_r($fileUserData);
+```
+// 获取 Redis 类型的缓存实例
+$redisCacheManager = \App\Library\Services\CacheManager::instance('redis');
+$redisCacheManager->set('user_123', ['name' => 'John Doe']);
+$redisUserData = $redisCacheManager->get('user_123');
+echo 'Redis Cache - User Data: ';
+print_r($redisUserData);
 
-	// 删除缓存
-	$fileCacheManager->delete('user_123');
+// 获取文件缓存实例
+$fileCacheManager = \App\Library\Services\CacheManager::instance('file');
+$fileCacheManager->set('user_123', ['name' => 'Jane Doe']);
+$fileUserData = $fileCacheManager->get('user_123');
+echo 'File Cache - User Data: ';
+print_r($fileUserData);
 
-	// 清除所有缓存
-	$fileCacheManager->clear(); 
-	$redisCacheManager->clear();
+// 删除缓存
+$fileCacheManager->delete('user_123');
 
+// 清除所有缓存
+$fileCacheManager->clear(); 
+$redisCacheManager->clear();
+```
 		
 
