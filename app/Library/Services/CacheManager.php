@@ -1,3 +1,5 @@
+<?php
+
 namespace App\Library\Services;
 
 use App\Library\Utilities\Config;

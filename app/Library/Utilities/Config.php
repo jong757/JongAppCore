@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Library\Utilities;
 
 use App\Library\Interfaces\ConfigInterface;
@@ -9,12 +8,23 @@ use Exception;
 class Config implements ConfigInterface
 {
     private static $config = [];
+    private static $directory = 'Config'; // 默认配置目录
+
+    /**
+     * 设置自定义配置目录
+     *
+     * @param string $dir 自定义目录
+     */
+    public static function setDirectory($dir)
+    {
+        self::$directory = $dir;
+    }
 
     /**
      * 获取配置项
      *
      * @param string $namespace 配置命名空间
-     * @param string|null $key 配置键
+     * @param string|null $key 配置键，支持嵌套键（如 redis.host）
      * @return mixed 配置值
      */
     public static function get($namespace, $key = null)
@@ -47,7 +57,7 @@ class Config implements ConfigInterface
     }
 
     /**
-     * 添加或修改配置项
+     * 设置或修改配置项
      *
      * @param string $namespace 配置命名空间
      * @param string $key 配置键
@@ -58,10 +68,14 @@ class Config implements ConfigInterface
         if (!isset(self::$config[$namespace])) {
             self::load($namespace);
         }
-
+    
+        // 修改内部配置项
         self::setNestedConfig(self::$config[$namespace], $key, $value);
-        self::save($namespace);
+    
+        // 调用修改后的 save 方法，只保存特定配置项
+        self::save($namespace, $key, $value);
     }
+
 
     private static function setNestedConfig(array &$config, $key, $value)
     {
@@ -127,11 +141,11 @@ class Config implements ConfigInterface
      */
     public static function load($namespace)
     {
-        $file = APP_PATH . 'Config' . DIRECTORY_SEPARATOR . $namespace . '.php';
+        $file = APP_PATH . self::$directory . DIRECTORY_SEPARATOR . $namespace . '.php';
         if (file_exists($file)) {
             self::$config[$namespace] = include $file;
         } else {
-            throw new Exception("Config file for {$namespace} not found.");
+            throw new Exception("Config file for {$namespace} not found in " . self::$directory . " directory.");
         }
     }
 
@@ -142,14 +156,19 @@ class Config implements ConfigInterface
      */
     public static function save($namespace)
     {
-        $file = APP_PATH . 'Config' . DIRECTORY_SEPARATOR . $namespace . '.php';
+        $file = APP_PATH . self::$directory . DIRECTORY_SEPARATOR . $namespace . '.php';
         if (file_exists($file)) {
+            // 将双反斜杠替换为单反斜杠
             $configContent = "<?php\nreturn " . self::convertArraySyntax(var_export(self::$config[$namespace], true)) . ";\n";
+            // 替换双反斜杠为单反斜杠
+            $configContent = str_replace('\\\\', '\\', $configContent);
+
             file_put_contents($file, $configContent);
         } else {
-            throw new Exception("Config file for {$namespace} not found.");
+            throw new Exception("Config file for {$namespace} not found in " . self::$directory . " directory.");
         }
     }
+
 
     /**
      * 将 array() 转换为短数组语法 []
@@ -162,4 +181,3 @@ class Config implements ConfigInterface
         return str_replace('array (', '[', str_replace(')', ']', $str));
     }
 }
-

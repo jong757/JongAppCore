@@ -1,6 +1,5 @@
-MVC目录结构和架构设计，采用了一些不同的组织方式：
-
 ### 结构
+
 ```
 JongAppCore
 ├─ app 					主要应用程序代码所在的目录。
@@ -28,31 +27,9 @@ JongAppCore
 └─ upload 				上传存放目录
 ```
 
-### 目录结构说明：
-- **app**: 主要应用程序代码所在的目录。
-  - **Config**: 配置文件目录，存放应用程序的配置文件。
-  - **Core.php**: 核心文件，可能包含应用程序的核心逻辑。
-  - **Library**: 库文件目录，存放自定义的库文件。
-    - **Helpers**: 存放一些辅助函数或工具类，这些函数或类可以在整个项目中重复使用。
-    - **Interfaces**: 存放接口定义，用于定义一些通用的接口规范。
-    - **Middleware**: 存放中间件类，用于处理请求和响应之间的逻辑。
-    - **Resources**: 资源文件目录。
-      - **Lang**: 语言文件目录，存放多语言支持的文件。
-      - **Views**: 视图文件目录，存放错误类型如404 500 等友好显示。
-    - **Routes**: 路由文件目录，存放应用程序的路由配置。
-    - **Services**: 服务文件目录，存放应用程序的服务类。
-    - **Traits**: 存放一些可以在多个类中复用的特性（Traits）。
-  - **Models**: 模型文件目录，存放应用程序的数据模型。
-  - **Views**: 视图文件目录，存放前端视图文件。
-  
-- **cache**: 缓存文件目录。
-  - **logs**: 日志文件目录，存放应用程序的日志文件。
-- **index.php**: 应用程序的入口文件。
-- **README.md**: 项目的说明文件，通常包含项目的简介、安装和使用说明。
-- **static**: 静态文件目录，存放CSS、JavaScript、图片等静态资源。
-- **upload**: 上传文件目录，存放用户上传的文件。
 
 ### 伪静态
+
 ```
 location /{
     if (!-e $request_filename) {
@@ -89,15 +66,15 @@ location /{
 ### 目前完成项和配置说明
 
 **composer**
-		- 已经自动加载 (全局可用)
+- 已经自动加载 (全局可用)
 
 **常量加载**
-		- 系统常量 \App\Library\Middleware\ConstantLoader::loadSystemConstants();
-		- 模型常量 \App\Library\Middleware\ConstantLoader::loadModuleConstants('ModuleA');
+- 系统常量 \App\Library\Middleware\ConstantLoader::loadSystemConstants();
+- 模型常量 \App\Library\Middleware\ConstantLoader::loadModuleConstants('ModuleA');
 
 **函数加载**
-		- 系统函数 \App\Library\Middleware\FunctionLoader::loadSystemFunctions();
-		- 模型函数 \App\Library\Middleware\FunctionLoader::loadModuleFunction('ModuleA');
+- 系统函数 \App\Library\Middleware\FunctionLoader::loadSystemFunctions();
+- 模型函数 \App\Library\Middleware\FunctionLoader::loadModuleFunction('ModuleA');
 
 **配置** (项增删改查)
 
@@ -106,7 +83,15 @@ location /{
 use App\Library\Utilities\Config;
 ```
 
+0. 是否使用自定义参数
+
+```
+// 设置自定义目录
+Config::setDirectory('CustomConfig');
+```
+
 1. 使用 `Config::get()` 获取配置项。
+
 ```
 Config::get('Cache');// 获取整个 'Cache' 配置命名空间
 Config::get('Cache', 'default');// 获取 'Cache' 配置下的 'default' 配置项
@@ -131,6 +116,7 @@ Config::delete('Cache', 'default');// 删除 'Cache' 配置下的 'default' 配�
 Config::delete('Cache', 'redis.host');// 删除嵌套配置项 'Cache.redis.host'
 Config::delete('Cache');// 删除整个 'Cache' 配置命名空间
 ```
+
 5. 使用 `Config::save()` 保存修改后的配置到文件。
 
 ```
@@ -141,25 +127,18 @@ Config::save('Cache');// 保存修改后的 'Cache' 配置到文件
 
 ```
 // 获取 Redis 类型的缓存实例
-$redisCacheManager = \App\Library\Services\CacheManager::instance('redis');
-$redisCacheManager->set('user_123', ['name' => 'John Doe']);
-$redisUserData = $redisCacheManager->get('user_123');
-echo 'Redis Cache - User Data: ';
-print_r($redisUserData);
-
-// 获取文件缓存实例
-$fileCacheManager = \App\Library\Services\CacheManager::instance('file');
-$fileCacheManager->set('user_123', ['name' => 'Jane Doe']);
-$fileUserData = $fileCacheManager->get('user_123');
-echo 'File Cache - User Data: ';
-print_r($fileUserData);
+$cacheManager = new \App\Library\Services\CacheManager('redis');  // 可以传入缓存类型 'file' 或 'redis' 可以默认为空是 'file'
+// 设置缓存
+$cacheManager->set('user_123/112', ['name' => 'John Doe', 'age' => 30]);
+// 获取缓存
+print_r($cacheManager->get('user_123/112'));
 
 // 删除缓存
-$fileCacheManager->delete('user_123');
+$cacheManager->delete('user_123');
 
 // 清除所有缓存
-$fileCacheManager->clear(); 
-$redisCacheManager->clear();
+$fileCacheManager->clear();
+
 ```
 		
 

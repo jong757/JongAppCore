@@ -1,17 +1,20 @@
-<?php
+<?php 
 namespace App\Library\Utilities;
 
 use App\Library\Interfaces\CacheInterface;
 use Exception;
+use App\Library\Traits\DirectoryHelper; // 引入 DirectoryHelper Trait
 
 class FileCache implements CacheInterface
 {
+    use DirectoryHelper; // 使用 DirectoryHelper Trait
+
     private $cacheDir;
 
     public function __construct(array $config)
     {
         $this->cacheDir = PATH . ($config['cache_dir'] ?: 'cache') . DIRECTORY_SEPARATOR;
-        if (!is_dir($this->cacheDir)) {
+        if (!$this->dirExists($this->cacheDir)) {
             throw new Exception("Cache directory does not exist: " . $this->cacheDir);
         }
     }
@@ -34,13 +37,13 @@ class FileCache implements CacheInterface
     public function get($key)
     {
         $filePath = $this->getCacheFilePath($key);
-        if (!file_exists($filePath)) {
+        if (!$this->fileExists($filePath)) {
             return null;
         }
 
         $data = unserialize(file_get_contents($filePath));
         if ($data['expires_at'] < time()) {
-            unlink($filePath); // 删除过期缓存
+            $this->fileDelete($filePath); // 删除过期缓存
             return null;
         }
 
@@ -50,29 +53,46 @@ class FileCache implements CacheInterface
     public function delete($key)
     {
         $filePath = $this->getCacheFilePath($key);
-        if (file_exists($filePath)) {
-            unlink($filePath);
-            return true;
+
+        // 如果是目录，删除目录
+        if ($this->dirExists($filePath)) {
+            return $this->dirDelete($filePath);
         }
-        return false;
+
+        // 如果是文件，删除文件
+        return $this->fileDelete($filePath);
     }
 
     public function clear()
     {
         $files = glob($this->cacheDir . '*');
         foreach ($files as $file) {
-            unlink($file);
+            // 检查是文件还是目录
+            if ($this->dirExists($file)) {
+                $this->dirDelete($file); // 递归删除目录
+            } else {
+                $this->fileDelete($file); // 删除文件
+            }
         }
         return true;
     }
 
+    /**
+     * 获取缓存文件的完整路径
+     *
+     * @param string $key
+     * @return string
+     */
     private function getCacheFilePath($key)
     {
         $path = $this->cacheDir . str_replace('/', DIRECTORY_SEPARATOR, $key) . '.cache';
         $dir = dirname($path);
-        if (!is_dir($dir)) {
-            mkdir($dir, 0777, true); // 自动创建多层目录
+
+        // 自动创建目录
+        if (!$this->dirExists($dir)) {
+            $this->dirCreate($dir, 0777); // 创建目录
         }
+
         return $path;
     }
 }
