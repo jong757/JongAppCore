@@ -140,5 +140,3 @@ $cacheManager->delete('user_123');
 $fileCacheManager->clear();
 
 ```
-		
-
