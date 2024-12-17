@@ -15,13 +15,22 @@ Core::register();
 $core = new Core();
 
 
+/* 
+* 数据库
+*/
+$DatabaseManager = new App\Library\Services\DatabaseService;
+// 获取数据库连接
+$connection = $DatabaseManager->getConnection();
+$users = $connection->read('db_admin');
+print_r($users);
+
 
 /* 
 *使用Config 设置配置
 */
 
 // 设置自定义目录
-Config::setDirectory('testconfig');
+// Config::setDirectory('testconfig');
 
 // 获取配置项
 // $cacheConfig = Config::get('Cache'); // 获取整个配置

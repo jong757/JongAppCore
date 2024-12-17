@@ -5,7 +5,7 @@ namespace App\Library\Utilities;
 use PDO;
 use App\Library\Traits\DatabaseOperations;  // 引入 DatabaseOperations trait
 
-class MysqlConnection
+class SqlServerConnection
 {
     use DatabaseOperations;  // 使用 DatabaseOperations trait
 
@@ -13,7 +13,7 @@ class MysqlConnection
 
     public function __construct(array $config)
     {
-        $dsn = "mysql:host={$config['host']};dbname={$config['dbname']};charset={$config['charset']}";
+        $dsn = "sqlsrv:Server={$config['host']};Database={$config['dbname']}";
         $this->pdo = new PDO($dsn, $config['username'], $config['password']);
     }
 

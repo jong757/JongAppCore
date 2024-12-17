@@ -1,58 +1,25 @@
+<?php
+
 namespace App\Library\Utilities;
 
-use App\Library\Interfaces\DatabaseInterface;
 use PDO;
-use Exception;
+use App\Library\Traits\DatabaseOperations;  // 引入 DatabaseOperations trait
 
-class SqliteConnection implements DatabaseInterface
+class SqliteConnection
 {
-    private $connection;
-    private $config;
+    use DatabaseOperations;  // 使用 DatabaseOperations trait
 
-    /**
-     * 构造函数，接受数据库配置
-     *
-     * @param array $config 数据库配置
-     */
+    private $pdo;
+
     public function __construct(array $config)
     {
-        $this->config = $config;
+        $dsn = "sqlite:{$config['database']}";
+        $this->pdo = new PDO($dsn);
     }
 
-    /**
-     * 获取数据库连接
-     *
-     * @return PDO
-     * @throws Exception
-     */
-    public function connect(): PDO
+    // 直接访问 PDO 实例
+    public function getConnection()
     {
-        if (!$this->connection) {
-            try {
-                $dsn = "sqlite:{$this->config['path']}";
-                $this->connection = new PDO($dsn);
-                $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                return $this->connection;
-            } catch (Exception $e) {
-                throw new Exception("Failed to connect to SQLite: " . $e->getMessage());
-            }
-        }
-
-        return $this->connection;
-    }
-
-    /**
-     * 执行 SQL 查询
-     *
-     * @param string $sql SQL 查询语句
-     * @param array $params 查询参数
-     * @return mixed
-     * @throws Exception
-     */
-    public function query(string $sql, array $params = [])
-    {
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $this->pdo;
     }
 }
