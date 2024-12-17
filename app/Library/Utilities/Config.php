@@ -1,5 +1,5 @@
 <?php
-
+//目前只有读取
 namespace App\Library\Utilities;
 
 use App\Library\Interfaces\ConfigInterface;

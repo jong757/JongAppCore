@@ -140,3 +140,41 @@ $cacheManager->delete('user_123');
 $fileCacheManager->clear();
 
 ```
+
+**数据**
+
+```
+// 初始化数据库连接(第一种)
+$DatabaseManager = new App\Library\Services\DatabaseService;
+$connection = $DatabaseManager->getConnection();
+// 初始化数据库连接(第二种)
+use App\Library\Services\DatabaseService;
+
+$dbService = new DatabaseService();
+$connection = $dbService->getConnection();
+```
+
+```
+//执行查询
+$sql = "SELECT * FROM users WHERE id = ?";
+$result = $connection->query($sql, [1]);
+```
+
+```
+//插入数据
+$data = ['name' => 'John Doe', 'email' => 'john@example.com'];
+$connection->insert('users', $data);
+```
+
+```
+//更新数据
+$data = ['email' => 'newemail@example.com'];
+$conditions = ['id' => 1];
+$connection->update('users', $data, $conditions);
+```
+
+```
+//删除数据
+$conditions = ['id' => 1];
+$connection->delete('users', $conditions);
+```

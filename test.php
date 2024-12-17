@@ -27,31 +27,6 @@ Config::setDirectory('testconfig');
 // $cacheConfig = Config::get('Cache'); // 获取整个配置
 // $defaultCache = Config::get('Cache', 'default'); // 获取 'default' 配置项
 
-// 设置或修改配置项
-// Config::set('Cache', 'da', 'huan0'); // 修改 'Cache.default'
-
-// Config::set('Cache', 'file.cache_dir', 'huan1'); // 修改 'Cache.redis.host'
-
-// Config::set('Cache', 'redis', [
-//         'ReflectionPath' => \App\Library\Utilities\FileCache::class, // 映射文件缓存类
-//         'cache_dir' => 'huan2', // 缓存文件存储目录
-//     ]);
-
-// Config::set('Cache', 'dake.cs.d', [
-//         'ReflectionPath' => \App\Library\Utilities\FileCache::class, // 映射文件缓存类
-//         'cache_dir' => 'huan3', // 缓存文件存储目录
-//     ]);
-
-// Config::set('Cache', 'dake.cs', [
-//         'ReflectionPath' => \App\Library\Utilities\FileCache::class, // 映射文件缓存类
-//         'cache_dir' => 'huan4', // 缓存文件存储目录
-//     ]);
-
-// // 删除配置项
-// Config::delete('Cache', 'da'); // 删除 'Cache.default'
-
-// 保存配置到文件
-// Config::save('Cache'); // 保存 'Cache' 配置到文件
 
 
 
