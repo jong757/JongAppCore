@@ -23,12 +23,14 @@ class Core
         // 加载 Composer 自动加载器
         $this->loadComposerAutoloader();
 
-        // 加载系统常量和函数
+        // 加载系统常量 函数 错误日志
         $this->loadSystemConstantsAndFunctions();
+		
+		//
     }
 
     /**
-     * 加载 Composer 自动加载器
+     * Composer 自动加载器
      */
     private function loadComposerAutoloader()
     {
@@ -42,7 +44,7 @@ class Core
     }
 
     /**
-     * 加载系统常量和函数
+     * 系统常量 函数 错误日志
      */
     private function loadSystemConstantsAndFunctions()
     {
@@ -51,6 +53,9 @@ class Core
 
         // 加载系统函数
         \App\Library\Middleware\FunctionLoader::loadSystemFunctions();
+		
+		//全局错误日志配置
+		\App\Library\Helpers\ErrorLogger::init(PATH . '/cache/logs/php_error.log');
     }
 
     /**
