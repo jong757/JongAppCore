@@ -20,7 +20,7 @@ trait DatabaseOperations
         $stmt = $this->executeQuery($sql, $conditions);
 
         // 获取所有结果
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 	//修改
     public function update($table, $data, $conditions)

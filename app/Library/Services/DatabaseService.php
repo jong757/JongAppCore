@@ -23,7 +23,7 @@ class DatabaseService
 
         // 如果传入了数据库类型，则使用传入的类型；否则使用配置文件中的默认数据库类型
         $this->dbType = $dbType ?? ($systemConfig['db'] ?? 'mysql');
-
+		
         try {
             // 动态实例化数据库连接类
             $this->initializeDatabase($dbConfig[$this->dbType]);

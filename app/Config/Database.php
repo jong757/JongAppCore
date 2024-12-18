@@ -13,7 +13,7 @@ return [
     ],
     'sqlite' => [
         'ReflectionPath' => 'App\\Library\\Utilities\\SqliteConnection', // 指定 SQLite 连接类
-        'database' => '/path/to/database.sqlite',
+        'database' => APP_PATH.'dbs.db',
     ],
     'sqlserver' => [
         'ReflectionPath' => 'App\\Library\\Utilities\\SqlServerConnection', // 指定 SQL Server 连接类

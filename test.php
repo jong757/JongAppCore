@@ -21,7 +21,7 @@ $core = new Core();
 $DatabaseManager = new App\Library\Services\DatabaseService;
 // 获取数据库连接
 $connection = $DatabaseManager->getConnection();
-$users = $connection->read('ss');
+$users = $connection->read('db_admin');
 print_r($users);
 
 

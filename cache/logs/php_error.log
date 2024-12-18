@@ -1,1 +1,1 @@
-[18-Dec-2024 10:47:53 Asia/Shanghai] [2024-12-18 10:47:53] ERROR: Uncaught Exception: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'app.ss' doesn't exist in E:\JongAppCore\app\Library\Traits\DatabaseOperations.php on line 53
+[18-Dec-2024 11:44:28 Asia/Shanghai] [2024-12-18 11:44:28] ERROR: Unknown error occurred
