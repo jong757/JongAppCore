@@ -21,7 +21,9 @@ $core = new Core();
 $DatabaseManager = new App\Library\Services\DatabaseService;
 // 获取数据库连接
 $connection = $DatabaseManager->getConnection();
-$users = $connection->read('db_admin');
+$users = $connection->read('db_admin',['roleid' => 1]);
+// $sql = "SELECT * FROM db_admin WHERE id = ?";
+// $result = $connection->query($sql, [1]);
 print_r($users);
 
 

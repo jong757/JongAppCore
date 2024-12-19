@@ -156,8 +156,10 @@ $connection = $dbService->getConnection();
 
 ```
 //执行查询
-$sql = "SELECT * FROM users WHERE id = ?";
-$result = $connection->query($sql, [1]);
+
+$users = $connection->read('db_admin', ['status' => 'active'], '*', 10);
+print_r($users);
+
 ```
 
 ```
@@ -177,4 +179,53 @@ $connection->update('users', $data, $conditions);
 //删除数据
 $conditions = ['id' => 1];
 $connection->delete('users', $conditions);
+```
+
+#### 自定义sql
+
+```
+// 示例：执行一个 SELECT 查询，获取用户信息
+$sql = "SELECT * FROM users WHERE age > :age LIMIT :limit";
+$params = [
+    ':age' => 18,
+    ':limit' => 10
+];
+
+$stmt = $dbConnection->sqlQuery($sql, $params);
+
+// 获取查询结果
+$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+print_r($results);
+```
+
+```
+// 示例：执行一个 INSERT 查询，插入新用户
+$sql = "INSERT INTO users (name, age, email) VALUES (:name, :age, :email)";
+$params = [
+    ':name' => 'John Doe',
+    ':age' => 30,
+    ':email' => 'john.doe@example.com'
+];
+
+$stmt = $dbConnection->sqlQuery($sql, $params);
+```
+
+```
+// 示例：执行一个 UPDATE 查询，更新用户信息
+$sql = "UPDATE users SET email = :email WHERE id = :id";
+$params = [
+    ':email' => 'new.email@example.com',
+    ':id' => 1
+];
+
+$stmt = $dbConnection->sqlQuery($sql, $params);
+```
+```
+// 示例：执行一个 DELETE 查询，删除用户
+$sql = "DELETE FROM users WHERE id = :id";
+$params = [
+    ':id' => 1
+];
+
+$stmt = $dbConnection->sqlQuery($sql, $params);
 ```
